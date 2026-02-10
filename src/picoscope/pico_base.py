@@ -1,15 +1,12 @@
 try:
-    import ctypes
+    import ctypes, threading, time, os
     import numpy as np
     import pandas as pd
     import matplotlib.pyplot as plt
-    import threading
-    import time
-    import os
     from picosdk.ps2000a import ps2000a as ps
     from picosdk.functions import assert_pico_ok, adc2mV
 except ImportError:
-    raise SystemExit("Error importing modules - Did you run setup.sh?")
+    raise SystemExit("Error importing modules - Did you run pico_setup.sh?")
 
 class PicoStreamer:
     """
@@ -18,7 +15,7 @@ class PicoStreamer:
     """
 
     def __init__(self, max_samples=20_000_000):
-        self.chandle = scope.setup_channel('A', voltage_range='10V')ctypes.c_int16()
+        self.chandle = ctypes.c_int16()
         self.status = {}
         self.max_samples = max_samples
         self.is_open = False
