@@ -17,14 +17,14 @@ We have provided a `setup.sh` script to handle dependencies automatically.
 
 ### How to run it
 
-Open your terminal (or Git Bash on Windows) in the *top-level folder of this repo* and run:
+Open your terminal (or Git Bash on Windows) in `src/picoscope/` and run:
 
 ```bash
 # Make the script executable (only needed once)
 chmod +x pico_setup.sh
 
 # Run the setup
-./setup.sh
+./pico_setup.sh
 
 ```
 
