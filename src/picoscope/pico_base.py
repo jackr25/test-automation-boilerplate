@@ -26,7 +26,7 @@ class PicoStreamer:
         
         # data storage
         self.buffers_raw = {'A': None, 'B': None}
-        self.data_mv = {'A': None, 'B': None, 'Time': None}
+        self.data_mv: dict = {'A': np.array([]), 'B': np.array([]), 'Time': np.array([])}
         self.sample_count = 0
         self.max_adc = ctypes.c_int16()
         
@@ -46,13 +46,13 @@ class PicoStreamer:
     def open_unit(self):
         """Connects to the PicoScope."""
         print("Initializing PicoScope...")
-        self.status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(self.chandle), None)
+        self.status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(self.chandle), None) # pyright: ignore[reportAttributeAccessIssue]
         try:
             assert_pico_ok(self.status["openunit"])
             self.is_open = True
             
             # get Max ADC value for conversion later
-            ps.ps2000aMaximumValue(self.chandle, ctypes.byref(self.max_adc))
+            ps.ps2000aMaximumValue(self.chandle, ctypes.byref(self.max_adc)) # pyright: ignore[reportAttributeAccessIssue]
             print("Scope connected successfully.")
         except Exception as e:
             print(f"Error opening scope: {e}")
@@ -69,25 +69,25 @@ class PicoStreamer:
             raise ValueError("Channel must be 'A' or 'B'")
 
         ch_map = {
-            'A': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_A'],
-            'B': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_B']
+            'A': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_A'], # pyright: ignore[reportAttributeAccessIssue]
+            'B': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_B'] # pyright: ignore[reportAttributeAccessIssue]
         }
         
         # map simple strings to Pico Enums
         range_map = {
-            '10V': ps.PS2000A_RANGE['PS2000A_10V'],
-            '5V':  ps.PS2000A_RANGE['PS2000A_5V'],
-            '2V':  ps.PS2000A_RANGE['PS2000A_2V'],
-            '1V':  ps.PS2000A_RANGE['PS2000A_1V'],
+            '10V': ps.PS2000A_RANGE['PS2000A_10V'], # pyright: ignore[reportAttributeAccessIssue]
+            '5V':  ps.PS2000A_RANGE['PS2000A_5V'], # pyright: ignore[reportAttributeAccessIssue]
+            '2V':  ps.PS2000A_RANGE['PS2000A_2V'], # pyright: ignore[reportAttributeAccessIssue]
+            '1V':  ps.PS2000A_RANGE['PS2000A_1V'], # pyright: ignore[reportAttributeAccessIssue]
         }
         
-        selected_range = range_map.get(voltage_range, ps.PS2000A_RANGE['PS2000A_10V'])
+        selected_range = range_map.get(voltage_range, ps.PS2000A_RANGE['PS2000A_10V']) # pyright: ignore[reportAttributeAccessIssue]
         self.channel_ranges[channel] = selected_range
         
         # configure and enable
-        status = ps.ps2000aSetChannel(
+        status = ps.ps2000aSetChannel( # pyright: ignore[reportAttributeAccessIssue]
             self.chandle, ch_map[channel], 1, 
-            ps.PS2000A_COUPLING['PS2000A_DC'], 
+            ps.PS2000A_COUPLING['PS2000A_DC'], # pyright: ignore[reportAttributeAccessIssue]
             selected_range, 0.0
         )
         assert_pico_ok(status)
@@ -138,35 +138,35 @@ class PicoStreamer:
             return
 
         # disable unused channels to prevent driver errors
-        ch_map = {'A': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_A'], 'B': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_B']}
+        ch_map = {'A': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_A'], 'B': ps.PS2000A_CHANNEL['PS2000A_CHANNEL_B']} # pyright: ignore[reportAttributeAccessIssue]
         for ch, enabled in self.enabled_channels.items():
             if not enabled:
-                ps.ps2000aSetChannel(self.chandle, ch_map[ch], 0, 0, 0, 0) # 3rd arg 0 means it is disabled
+                ps.ps2000aSetChannel(self.chandle, ch_map[ch], 0, 0, 0, 0) # 3rd arg 0 means it is disabled # pyright: ignore[reportAttributeAccessIssue]
 
         # allocate memory for enable channels only
         buffer_size = 1000
         
         if self.enabled_channels['A']:
-            self.buffers_raw['A'] = np.zeros(shape=self.max_samples, dtype=np.int16)
+            self.buffers_raw['A'] = np.zeros(shape=self.max_samples, dtype=np.int16) # pyright: ignore[reportArgumentType, reportAttributeAccessIssue]
             self.temp_buffer_a = np.zeros(shape=buffer_size, dtype=np.int16)
-            ps.ps2000aSetDataBuffers(self.chandle, ch_map['A'],
+            ps.ps2000aSetDataBuffers(self.chandle, ch_map['A'], # pyright: ignore[reportAttributeAccessIssue]
                                     self.temp_buffer_a.ctypes.data_as(ctypes.POINTER(ctypes.c_int16)),
-                                    None, buffer_size, 0, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE'])
+                                    None, buffer_size, 0, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE']) # pyright: ignore[reportAttributeAccessIssue]
 
         if self.enabled_channels['B']:
-            self.buffers_raw['B'] = np.zeros(shape=self.max_samples, dtype=np.int16)
+            self.buffers_raw['B'] = np.zeros(shape=self.max_samples, dtype=np.int16) # pyright: ignore[reportArgumentType, reportAttributeAccessIssue]
             self.temp_buffer_b = np.zeros(shape=buffer_size, dtype=np.int16)
-            ps.ps2000aSetDataBuffers(self.chandle, ch_map['B'],
+            ps.ps2000aSetDataBuffers(self.chandle, ch_map['B'], # pyright: ignore[reportAttributeAccessIssue]
                                     self.temp_buffer_b.ctypes.data_as(ctypes.POINTER(ctypes.c_int16)),
-                                    None, buffer_size, 0, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE'])
+                                    None, buffer_size, 0, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE']) # pyright: ignore[reportAttributeAccessIssue]
 
         # start streaming
-        cFuncPtr = ps.StreamingReadyType(self._streaming_callback)
+        cFuncPtr = ps.StreamingReadyType(self._streaming_callback) # pyright: ignore[reportAttributeAccessIssue]
         sample_interval = ctypes.c_int32(int(sample_interval_ns / 1000))
         
-        ps.ps2000aRunStreaming(self.chandle, ctypes.byref(sample_interval), 
-                            ps.PS2000A_TIME_UNITS['PS2000A_US'], 0, self.max_samples, 
-                            1, 1, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE'], buffer_size)
+        ps.ps2000aRunStreaming(self.chandle, ctypes.byref(sample_interval), # pyright: ignore[reportAttributeAccessIssue]
+                            ps.PS2000A_TIME_UNITS['PS2000A_US'], 0, self.max_samples, # pyright: ignore[reportAttributeAccessIssue]
+                            1, 1, ps.PS2000A_RATIO_MODE['PS2000A_RATIO_MODE_NONE'], buffer_size)# pyright: ignore[reportAttributeAccessIssue]
 
         print("Streaming started.")
         
@@ -179,7 +179,7 @@ class PicoStreamer:
                 if self.stop_event.is_set():
                     break
                 
-                ps.ps2000aGetStreamingLatestValues(self.chandle, cFuncPtr, None)
+                ps.ps2000aGetStreamingLatestValues(self.chandle, cFuncPtr, None)# pyright: ignore[reportAttributeAccessIssue]
                 
                 # status messages
                 if self.sample_count > 0 and self.sample_count % 5000 == 0:
@@ -199,7 +199,7 @@ class PicoStreamer:
             self.stop_event.set()
             
         print("\nStopping capture...")
-        ps.ps2000aStop(self.chandle)
+        ps.ps2000aStop(self.chandle) # pyright: ignore[reportAttributeAccessIssue]
         self._process_data(sample_interval_ns)
 
     def _process_data(self, sample_interval_ns):
@@ -254,10 +254,10 @@ class PicoStreamer:
             
         plt.figure(figsize=(10, 6))
         
-        if self.enabled_channels['A']:
+        if self.enabled_channels['A'] and self.data_mv['A'] is not None:
             plt.plot(self.data_mv['Time'], self.data_mv['A'], label="Ch A", color='blue')
             
-        if self.enabled_channels['B']:
+        if self.enabled_channels['B'] and self.data_mv['B'] is not None:
             plt.plot(self.data_mv['Time'], self.data_mv['B'], label="Ch B", color='orange', alpha=0.7)
             
         plt.xlabel("Time (s)")
@@ -276,7 +276,7 @@ class PicoStreamer:
     def close_unit(self):
         """Clean up connection."""
         if self.is_open:
-            ps.ps2000aStop(self.chandle)
-            ps.ps2000aCloseUnit(self.chandle)
+            ps.ps2000aStop(self.chandle) # pyright: ignore[reportAttributeAccessIssue]
+            ps.ps2000aCloseUnit(self.chandle) # pyright: ignore[reportAttributeAccessIssue]
             self.is_open = False
             print("PicoScope connection closed.")

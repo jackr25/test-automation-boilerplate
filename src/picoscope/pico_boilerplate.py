@@ -11,7 +11,7 @@ SAVE_FILENAME = "supercap_test_01"
 SAMPLE_INTERVAL_NS = 1_000_000  # 1ms resolution (1,000,000 ns)
 
 def main():
-    with PicoStreamer() as scope:
+    with PicoStreamer() as scope: # MAKE SURE YOU CLOSE THE PICOSCOPE APP
         
         # Setup Channels
         # Options: '10V', '5V', '2V', '1V'
