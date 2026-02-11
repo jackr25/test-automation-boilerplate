@@ -24,8 +24,17 @@ Open your terminal (or Git Bash on Windows) in `src/picoscope/` and run:
 chmod +x pico_setup.sh
 
 # Run the setup
-./pico_setup.sh
+source pico_setup.sh
 
+# Activate the environment
+source src/picoscope/venv/bin/activate    # (Linux/Mac)
+# OR
+source src/picoscope/venv/Scripts/activate # (Git Bash/Windows)
+
+# If you're inside the src/picoscope folder
+source venv/bin/activate
+# OR
+source venv/Scripts/activate
 ```
 
 ## 2. PicoScope GUI Install (Windows, Mac)
