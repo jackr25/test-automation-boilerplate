@@ -1,0 +1,16 @@
+contourpy==1.3.3
+cycler==0.12.1
+fonttools==4.61.1
+grpcio==1.78.0
+kiwisolver==1.4.9
+logic2-automation==1.0.11
+matplotlib==3.10.8
+numpy==2.4.2
+packaging==26.0
+pandas==3.0.0
+pillow==12.1.0
+protobuf==6.33.5
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+six==1.17.0
+typing_extensions==4.15.0

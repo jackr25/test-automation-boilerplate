@@ -62,7 +62,6 @@ fi
 
 # venv setup
 
-
 if [ "$USE_VENV" = false ]; then
     # Global Install
     echo "Installing Python dependencies globally..."
