@@ -14,7 +14,7 @@ if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
 else
     INTERACTIVE_MODE=false
     echo "⚠️  NOTE: You are executing this script, so the environment will NOT stay active."
-    echo "   To keep it active, run: source src/picoscope/setup.sh"
+    echo "   To keep it active, run: source src/logic_analyzer/setup.sh"
     echo "   (Continuing with installation...)"
     echo ""
 fi
@@ -44,12 +44,6 @@ fi
 
 echo "Using Python: $($PY_CMD --version)"
 
-
-# Create Requirements if missing
-if [ ! -f "$REQ_FILE" ]; then
-    echo "Creating default requirements.txt..."
-    printf "picosdk\nnumpy\npandas\nmatplotlib\n" > "$REQ_FILE"
-fi
 
 # Create VENV if missing
 if [ ! -d "$VENV_PATH" ]; then

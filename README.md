@@ -7,7 +7,7 @@ Boilerplate, default configs, and examples for test automation using the logic a
 Follow the respective installation instructions for the environment you need, be it for PicoScope or Logic Analyzer. These instructions are linked below:
 
 - [PicoScope Environment Setup](docs/Pico_Setup.md)
-- Logic Analyzer WIP
+- [Saleae Logic Analyzer Environment Setup and Logic2 Downloads](docs/Saleae_Setup.md)
 
 Both tools will require Python 3, and can run on Windows, Mac, or Linux
 

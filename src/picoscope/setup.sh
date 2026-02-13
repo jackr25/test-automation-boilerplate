@@ -45,12 +45,6 @@ fi
 echo "Using Python: $($PY_CMD --version)"
 
 
-# Create Requirements if missing
-if [ ! -f "$REQ_FILE" ]; then
-    echo "Creating default requirements.txt..."
-    printf "picosdk\nnumpy\npandas\nmatplotlib\n" > "$REQ_FILE"
-fi
-
 # Create VENV if missing
 if [ ! -d "$VENV_PATH" ]; then
     echo "Creating Virtual Environment..."
